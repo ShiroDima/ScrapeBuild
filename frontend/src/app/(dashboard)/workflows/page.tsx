@@ -1,10 +1,28 @@
+import { getUserWorkflows } from "@/actions/workflows/getUserWorkflows";
+import CreateWorkflowDialog from "@/components/features/workflow/CreateWorkflowDialog";
 import UserWorkflows from "@/components/features/workflow/UserWorkflows";
 import { Skeleton } from "@/components/ui/skeleton";
-import { waitFor } from "@/lib/helpers/waitFor";
+import { useQuery, QueryClient, HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import React, { Suspense } from "react";
 
 
-export default function Workflows() {
+export default async function Workflows() {
+    // const {promise, isError, error} = useQuery({
+    //     queryKey: ['workflows'],
+    //     queryFn: getUserWorkflows,
+    //     refetchInterval: 5 * 1000,
+    //     // select: (data) => data.data !== null ? data.data : data.error as string,
+    //     refetchOnReconnect: 'always',
+    //     refetchOnWindowFocus: 'always'
+    // })
+
+    const queryClient = new QueryClient()
+
+    // await queryClient.prefetchQuery({
+    //     queryKey: ['workflows'],
+    //     queryFn: getUserWorkflows
+    // })
+
     return (
         <main className="flex-1 flex flex-col h-full">
             <div className="flex justify-between">
@@ -14,12 +32,13 @@ export default function Workflows() {
                     </h1>
                     <p className="text-muted-foreground">Manage your workflows</p>
                 </div>
+                <CreateWorkflowDialog />
             </div>
 
             <div className="h-full py-6">
-                <Suspense fallback={<UserWorkflowsSkeleton />}>
+                <HydrationBoundary state={dehydrate(queryClient)}>
                     <UserWorkflows />
-                </Suspense>
+                </HydrationBoundary>
             </div>
         </main>
     )

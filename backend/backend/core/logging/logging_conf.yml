@@ -1,0 +1,49 @@
+version: 1
+# disable_existing_logger: False
+
+formatters:
+  simple:
+    format: "[%(asctime)s] | [%(name)s] | [%(levelname)s] => %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  info:
+    format: "[%(levelname)s] => %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+
+  console.request:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: info
+    stream: ext://sys.stdout
+
+  file:
+    class: logging.FileHandler
+    level: INFO
+    formatter: simple
+    filename: backend/.logs/myapp.log
+    mode: a
+
+loggers:
+  dev:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+
+  test:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+
+  prod:
+    level: WARNING
+    handlers: [file]
+    propagate: no
+
+root:
+  level: INFO
+  handlers: [console.request]

@@ -1,6 +1,11 @@
 import logging
+import logging.config
 import os
 import sys
+from pathlib import Path
+
+
+import yaml
 
 
 from backend.core.settings import app_settings
@@ -47,7 +52,7 @@ def addLoggingLevel(level_name: str, level_num: int, method_name: str | None = N
         logging.log(level_num, message, *args, **kwargs)
 
     logging.addLevelName(level_num, level_name)
-    setattr(logging, level_num, level_num)
+    setattr(logging, level_name, level_num)
     setattr(logging.getLoggerClass(), method_name, logForLevel)
     setattr(logging, method_name, logToRoot)
 
@@ -55,10 +60,10 @@ def addLoggingLevel(level_name: str, level_num: int, method_name: str | None = N
 
 def setup_logging():
     # try to add a RESULT level
-    try:
-        addLoggingLevel('RESULT', 35)
-    except AttributeError:
-        pass
+    # try:
+    #     addLoggingLevel('RESULT', 35)
+    # except AttributeError:
+    #     pass
 
     log_type = app_settings.browser_settings.BROWSER_USE_LOG_LEVEL.lower()
 
@@ -67,8 +72,36 @@ def setup_logging():
         return
     
     # clear existing handlers
-    root = logging.getLogger()
-    root.handlers = []
+    # root = logging.getLogger()
+    # root.handlers = []
 
+    # set logging for 3rd party libraries to only show ERRORS
+    for logger in [
+        'httpx',
+        'playwright',
+        'asyncio',
+        'openai',
+        'langchain',
+        "uvicorn"
+    ]:
+        third_party_logger = logging.getLogger(logger)
+        third_party_logger.setLevel(logging.ERROR)
+        third_party_logger.propagate = False
+
+
+    conf_path = Path(__file__).parent / "logging_conf.yml"
+    with open(conf_path, 'r') as f:
+        conf = yaml.safe_load(f)
+
+        logging.config.dictConfig(conf)
+
+    
+    env_logger = logging.getLogger(app_settings.ENVIRONMENT)
+    # env_logger.propagate = False
+
+    env_logger.debug("Logger configured successfully!")
+
+
+# class Logger
     
 

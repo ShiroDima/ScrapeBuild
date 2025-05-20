@@ -23,8 +23,7 @@ from backend.server.exceptions import *
 
 workflow = APIRouter(
     prefix="/api/workflow/{user_id}",
-    tags=['Workflow'],
-    
+    tags=['Workflow']
 )
 
 
@@ -33,7 +32,8 @@ workflow = APIRouter(
     responses={
         status.HTTP_200_OK: {"model": StandardResponse[Sequence[Workflow]], "description": "Successfully retrieved the workflows for the user."},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": WorkflowFetchException, "description": "An error occurred while fetching the user's workflows."}
-    }
+    },
+    status_code=status.HTTP_200_OK
 )
 async def get_user_workflows(user_id: str, db: DB_Dependency, session: Session_Dependency):
     user_workflows = await fetch_user_workflows_with_clerkId(db, session, user_id)
@@ -44,9 +44,10 @@ async def get_user_workflows(user_id: str, db: DB_Dependency, session: Session_D
     )
 
 @workflow.post(
-    "/",
+    "/create-workflow",
     responses={
         status.HTTP_201_CREATED: {"model": StandardResponse[str], "description": "Workflow created successfully."},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPException, "description": "Trying to add to the database, one or more fields that should be unique in the database."},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": None, "description": "An error occurred while creating the workflow"}
     },
     status_code=status.HTTP_201_CREATED

@@ -27,6 +27,12 @@ async def fetch_user_workflows_with_clerkId(db: DBRepo, session: AsyncSession, c
     
 
 async def create_user_workflows(workflow_create_schema: CreateWorkflowSchema, db: DBRepo, session: AsyncSession, clerkId: str) -> None:
+    """
+    Create a new user workflow from the data given.
+
+    Args:
+        workflow_create_schema (CreateWorkflowSchema): The data for the workflow to create 
+    """
     try:
         await db.create_user_workflow(workflow_create_schema, session, clerkId)
     except IntegrityError as error:

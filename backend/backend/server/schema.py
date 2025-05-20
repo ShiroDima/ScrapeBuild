@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4, ConfigDict
+from pydantic import BaseModel, UUID4, ConfigDict, Field
 import pendulum as pdl
 
 
@@ -14,6 +14,12 @@ class StandardResponse(BaseModel, Generic[T]):
     success: bool
     data: T
 
+class CreateWorkflowSchema(BaseModel):
+    userId: UUID4
+    name: str
+    description: str
+    # created_at: pdl.DateTime = Field(default_factory=pdl.now)
+    # updated_at: pdl.DateTime = Field(default_factory=pdl.now)
 
 class WorkflowResponse(BaseModel):
     id: UUID4

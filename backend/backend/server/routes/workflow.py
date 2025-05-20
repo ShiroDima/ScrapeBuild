@@ -12,6 +12,7 @@ from backend.server.schema import (
     CreateWorkflowSchema
 )
 from backend.core.database.models import Workflow
+from backend.server.schema import WorkflowResponse, ErrorModel
 from backend.server.service.workflow import (
     fetch_user_workflows_with_clerkId,
     create_user_workflows
@@ -30,8 +31,8 @@ workflow = APIRouter(
 @workflow.get(
     "/",
     responses={
-        status.HTTP_200_OK: {"model": StandardResponse[Sequence[Workflow]], "description": "Successfully retrieved the workflows for the user."},
-        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": WorkflowFetchException, "description": "An error occurred while fetching the user's workflows."}
+        status.HTTP_200_OK: {"model": StandardResponse[Sequence[WorkflowResponse]], "description": "Successfully retrieved the workflows for the user."},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ErrorModel, "description": "An error occurred while fetching the user's workflows."}
     },
     status_code=status.HTTP_200_OK
 )
@@ -40,14 +41,14 @@ async def get_user_workflows(user_id: str, db: DB_Dependency, session: Session_D
 
     return StandardResponse(
         success=True,
-        data=user_workflows
+        data=[WorkflowResponse.from_orm(w) for w in user_workflows]
     )
 
 @workflow.post(
     "/create-workflow",
     responses={
         status.HTTP_201_CREATED: {"model": StandardResponse[str], "description": "Workflow created successfully."},
-        status.HTTP_400_BAD_REQUEST: {"model": HTTPException, "description": "Trying to add to the database, one or more fields that should be unique in the database."},
+        status.HTTP_400_BAD_REQUEST: {"model": ErrorModel, "description": "Trying to add to the database, one or more fields that should be unique in the database."},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": None, "description": "An error occurred while creating the workflow"}
     },
     status_code=status.HTTP_201_CREATED

@@ -14,8 +14,12 @@ class StandardResponse(BaseModel, Generic[T]):
     success: bool
     data: T
 
+class ErrorModel(BaseModel):
+    status_code: int
+    details: str
+
 class CreateWorkflowSchema(BaseModel):
-    userId: UUID4
+    # userId: UUID4
     name: str
     description: str
     # created_at: pdl.DateTime = Field(default_factory=pdl.now)

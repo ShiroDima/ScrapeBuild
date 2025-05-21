@@ -1,5 +1,4 @@
 
-import { createUserWorkflow } from "@/actions/workflows"
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -8,18 +7,16 @@ import {
     FormDescription,
     FormItem,
     FormLabel,
-    FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { createWorkflowSchema, CreateWorkflowType } from "@/lib/schemas/workflow"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { useForm, UseFormReturn } from "react-hook-form"
+import {  CreateWorkflowType } from "@/lib/schemas/workflow"
+import { UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
 import { useCallback } from "react"
 import { Loader2 } from "lucide-react"
+import { useCreateWorkflow } from "@/hooks/mutations/use-create-workflow"
 
 
 interface CreateWorkflowProp {
@@ -34,29 +31,7 @@ interface CreateWorkflowProp {
 
 
 const CreateWorkflowForm = ({form}: CreateWorkflowProp) => {
-    const {mutate, isPending} = useMutation({
-        mutationFn: createUserWorkflow,
-        onSuccess: ({}) => {
-            toast.success("Workflow created!", {
-                id: "create-workflow",
-                style: {
-                    background: "bg-green-500",
-                    border: "1px solid bg-green-500",
-                    color: "text-primary-foreground"
-                }
-            })
-        },
-        onError: () => {
-            toast.error("Failed to create workflow. Please try again", {
-                id: "create-workflow",
-                style: {
-                    background: "bg-red-500",
-                    border: "1px solid bg-red-500",
-                    color: "text-primary-foreground"
-                }
-            })
-        }
-    })
+    const {mutate, isPending} = useCreateWorkflow()
 
     const onSubmit = useCallback((values: CreateWorkflowType) => {
         toast.loading("Creating workflow...", {id: "create-workflow"})

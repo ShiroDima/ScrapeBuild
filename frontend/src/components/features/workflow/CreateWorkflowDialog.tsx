@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Layers2Icon } from "lucide-react";
-import CustomDialogHeader from "./CustomDialogHeader";
+import CustomDialogHeader from "../../shared/CustomDialogHeader";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createWorkflowSchema } from "@/lib/schemas/workflow";

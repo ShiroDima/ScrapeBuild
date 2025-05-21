@@ -9,7 +9,7 @@ import {
  * Retrieve the error message from an Axios error
  * @param error The error to render a toast for
  */
-export const retrireveAxiosErrorMessage = (error: AxiosError): string => {
+export const retrieveAxiosErrorMessage = (error: AxiosError): string => {
     let errorMessage: string | null = null;
 
     if (isAxiosErrorWithErrorField(error) && error.response?.data?.error) {

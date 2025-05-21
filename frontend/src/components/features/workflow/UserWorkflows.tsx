@@ -1,12 +1,12 @@
 "use client"
 
 import React from "react"
-import { useQuery } from "@tanstack/react-query"
-import { getUserWorkflows } from "@/actions/workflows/getUserWorkflows"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, InboxIcon } from "lucide-react"
-import { ServerResponse, Workflow } from "@/lib/types/workflow"
+// import { Workflow } from "@/lib/types/workflow"
 import CreateWorkflowDialog from "./CreateWorkflowDialog"
+import { useGetWorkflows } from "@/hooks/query/use-get-workflows"
+import WorkflowCard from "./WorkflowCard"
 
 
 export default function UserWorkflows() {
@@ -21,20 +21,20 @@ export default function UserWorkflows() {
     //     },
     //     initialData: {data: [], error: null}
     // })
+    const {data: userWorkflows, isFetching, isError, error} = useGetWorkflows()
 
-    const userWorkflows: Workflow[] | string = []
 
-    if(typeof userWorkflows === "string") {
-        return (
-            <Alert>
-                <AlertCircle className="w-4 h-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                    {userWorkflows}
-                </AlertDescription>
-            </Alert>
-        )
-    }
+    // if(typeof userWorkflows === "string") {
+    //     return (
+    //         <Alert>
+    //             <AlertCircle className="w-4 h-4" />
+    //             <AlertTitle>Error</AlertTitle>
+    //             <AlertDescription>
+    //                 {userWorkflows}
+    //             </AlertDescription>
+    //         </Alert>
+    //     )
+    // }
 
     if(userWorkflows && userWorkflows.length === 0) {
         return (
@@ -50,6 +50,14 @@ export default function UserWorkflows() {
             </div>
         )
     }
+
+    return userWorkflows && (<div className="grid grid-cols-1 gap-4">
+        {
+            userWorkflows.map(workflow => (
+                <WorkflowCard key={workflow.id} workflow={workflow}/>
+            ))
+        }
+    </div>)
     
 }
 

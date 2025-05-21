@@ -1,15 +1,15 @@
 "use server"
 
 import { auth } from "@clerk/nextjs/server"
-import { ServerResponse, Workflow } from "@/lib/types/workflow"
+import { Workflow } from "@/lib/types/workflow"
 import Workflows from "@/lib/api/workflows"
-import { retrireveAxiosErrorMessage } from "@/lib/helpers/retrieve-axios-error-message"
+import { retrieveAxiosErrorMessage } from "@/lib/helpers/retrieve-axios-error-message"
 import { isAxiosError } from "axios"
 import { CreateWorkflowType } from "@/lib/schemas/workflow"
 import { redirect } from "next/navigation"
 
 
-async function checkIsAuthenticated(): Promise<string> {
+export async function checkIsAuthenticated(): Promise<string> {
     const { userId } = await auth()
 
     if (!userId) throw new Error("Unauthenticated!")
@@ -18,37 +18,26 @@ async function checkIsAuthenticated(): Promise<string> {
 }
 
 
-export async function getUserWorkflows(): Promise<ServerResponse<Workflow[]>> {
+export async function getUserWorkflows(): Promise<Workflow[] | null> {
 
-    const userId = await checkIsAuthenticated()
+    // const userId = await checkIsAuthenticated()
+    const apiResponse = await Workflows.getUserWorkflows("12345")
+    return apiResponse
 
-    try {
-        const apiResponse = await Workflows.getUserWorkflows(userId)
-
-        return {
-            data: apiResponse,
-            error: null
-        }
-    } catch (error) {
-        const errorMessage = isAxiosError(error) && error.status && error.status <= 500 && retrireveAxiosErrorMessage(error) || "An unexpected error occured";
-
-        return {
-            data: null,
-            error: errorMessage
-        }
-    }
 }
 
 
-export async function createUserWorkflow(form: CreateWorkflowType) {
-    const id = await checkIsAuthenticated()
+export async function createUserWorkflow(form: CreateWorkflowType): Promise<Workflow | null> {
+    // const id = await checkIsAuthenticated()
 
-    try {
-        const workflow = await Workflows.createUserWorkflow(id, form)
+    const workflow = await Workflows.createUserWorkflow("1234", form)
 
-        redirect(`/workflow/editor/${workflow.id}`)
-    } catch (error) {
-        console.log("An error occurred...", error)
-        throw error
-    }
+    return workflow
+}
+
+
+export async function deleteUserWorkflow(workflowId: string): Promise<string | null> {
+    // const id = await checkIsAuthenticated()
+    const workflow = await Workflows.deleteUserWorkflow("1234", workflowId)
+    return workflow
 }

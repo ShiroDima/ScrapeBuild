@@ -45,7 +45,7 @@ async def get_user_workflows(user_id: str, db: DB_Dependency, session: Session_D
     )
 
 @workflow.post(
-    "/create-workflow",
+    "/create",
     responses={
         status.HTTP_201_CREATED: {"model": StandardResponse[str], "description": "Workflow created successfully."},
         status.HTTP_400_BAD_REQUEST: {"model": ErrorModel, "description": "Trying to add to the database, one or more fields that should be unique in the database."},

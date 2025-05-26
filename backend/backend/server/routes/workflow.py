@@ -76,7 +76,7 @@ async def create_new_user_workflow(
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ErrorModel, "description": "An error occurred while deleting the workflow."}
     }
 )
-async def delete_old_user_workflow(workflow_id: Annotated[UUID4, Path()], db: DB_Dependency, session: Session_Dependency):
-    await delete_user_workflow(workflow_id=workflow_id, session=session, db=db)
+async def delete_old_user_workflow(req: Request, workflow_id: Annotated[UUID4, Path()], db: DB_Dependency, session: Session_Dependency):
+    await delete_user_workflow(workflow_id=workflow_id, session=session, db=db, clerkId=req.state.user_id)
 
     return None

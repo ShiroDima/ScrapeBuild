@@ -1,5 +1,9 @@
 from backend.server.app import app as base_app
-from backend.server.middleware import LocalhostCORSMiddleware, LoggingMiddleware
+from backend.server.middleware import (
+    LocalhostCORSMiddleware, 
+    LoggingMiddleware,
+    AuthMiddleware
+)
 
 from uvicorn import run
 
@@ -11,6 +15,7 @@ base_app.add_middleware(
 )
 
 base_app.add_middleware(LoggingMiddleware)
+base_app.add_middleware(AuthMiddleware)
 
 
 

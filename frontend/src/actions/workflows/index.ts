@@ -20,24 +20,24 @@ export async function checkIsAuthenticated(): Promise<string> {
 
 export async function getUserWorkflows(): Promise<Workflow[] | null> {
 
-    // const userId = await checkIsAuthenticated()
-    const apiResponse = await Workflows.getUserWorkflows("12345")
+    const userId = await checkIsAuthenticated()
+    const apiResponse = await Workflows.getUserWorkflows(userId)
     return apiResponse
 
 }
 
 
 export async function createUserWorkflow(form: CreateWorkflowType): Promise<Workflow | null> {
-    // const id = await checkIsAuthenticated()
+    const id = await checkIsAuthenticated()
 
-    const workflow = await Workflows.createUserWorkflow("1234", form)
+    const workflow = await Workflows.createUserWorkflow(id, form)
 
     return workflow
 }
 
 
 export async function deleteUserWorkflow(workflowId: string): Promise<string | null> {
-    // const id = await checkIsAuthenticated()
-    const workflow = await Workflows.deleteUserWorkflow("1234", workflowId)
+    const id = await checkIsAuthenticated()
+    const workflow = await Workflows.deleteUserWorkflow(id, workflowId)
     return workflow
 }

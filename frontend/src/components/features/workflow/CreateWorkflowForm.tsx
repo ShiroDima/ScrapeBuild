@@ -65,7 +65,7 @@ const CreateWorkflowForm = ({form}: CreateWorkflowProp) => {
                     render={({field}) => (
                         <FormItem>
                             <FormLabel className="flex gap-1 items-center">
-                                Name
+                                Description
                                 <p className="text-xs text-muted-foreground">(optional)</p>
                             </FormLabel>
                             <FormControl>

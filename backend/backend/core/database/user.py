@@ -6,22 +6,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 
 
-from backend.core.database.models import User
+# from backend.core.database.models import User
 
 
-class UserDBRepoMixin:
-    async def get_user_by_clerk_id(self, session: AsyncSession, clerkId: str) -> User | None:
-        query = select(User).where(User.clerkId == clerkId)
+# class UserDBRepoMixin:
+#     async def get_user_by_clerk_id(self, session: AsyncSession, clerkId: str) -> User | None:
+#         query = select(User).where(User.clerkId == clerkId)
 
-        response = await session.execute(query)
+#         response = await session.execute(query)
 
-        return response.scalar_one_or_none()
+#         return response.scalar_one_or_none()
     
-    async def get_user_by_id(self, session: AsyncSession, userId: str) -> User | None:
-        query = select(User).where(User.id == userId)
+#     async def get_user_by_id(self, session: AsyncSession, userId: str) -> User | None:
+#         query = select(User).where(User.id == userId)
 
-        response = await session.executer(query)
+#         response = await session.executer(query)
 
-        return response.scalar_or_none()
+#         return response.scalar_or_none()
     
 

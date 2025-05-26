@@ -20,7 +20,7 @@ class Workflows {
         }
 
         try {
-            const { data: serverResponse } = await apiClient.get<ServerResponse<Workflow[]>>(`/api/workflow/${id}`, config) // FIXME: Remove the ID from the path parameter in the backend so that it fully uses the header to pass the user ID.
+            const { data: serverResponse } = await apiClient.get<ServerResponse<Workflow[]>>(`/api/workflow/`, config) 
             return serverResponse.data
         } catch (error) {
             console.log("Error: ", error)
@@ -49,13 +49,15 @@ class Workflows {
             ...data
         }
 
-        try {
-            const { data } = await apiClient.post<ServerResponse<Workflow>>(`/api/workflow/${id}/create`, postData, config)
-            return data.data
-        } catch (error) {
-            console.log("Error: ", error)
-            throw error
-        }
+        const { data: serverResponse } = await apiClient.post<ServerResponse<Workflow>>(`/api/workflow/create`, postData, config)
+        return serverResponse.data
+
+        // try {
+            
+        // } catch (error) {
+        //     console.log("Error: ", error)
+        //     throw error
+        // }
     }
 
     static async deleteUserWorkflow(id: string, workflowId: string): Promise<string | null> {
@@ -66,7 +68,7 @@ class Workflows {
         }
 
         try {
-            const { data } = await apiClient.delete<ServerResponse<string>>("`/api/workflow/${id}/delete")
+            const { data } = await apiClient.delete<ServerResponse<string>>(`/api/workflow/${workflowId}/delete`)
 
             return data.data
         } catch (error) {

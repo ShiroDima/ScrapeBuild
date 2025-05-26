@@ -1,14 +1,38 @@
-from pydantic import BaseModel, UUID4, ConfigDict, Field
+from pydantic import BaseModel, UUID4, ConfigDict, Field, BeforeValidator
 import pendulum as pdl
 
 
 from backend.core.database.database import Base
 
 
-from typing import Generic, TypeVar, Type, Self
+from typing import Generic, TypeVar, Type, Self, Any, Annotated
+import uuid
+from datetime import datetime
 
 
 T = TypeVar('T')
+
+
+def convert_to_pendulum_datetime(v: Any) -> pdl.DateTime:
+    if isinstance(v, pdl.DateTime):
+        return v
+    if isinstance(v, str):
+        return pdl.parse(v)
+    
+    raise ValueError(f"Cannot convert {type(v)} to pendulum.DateTime")
+
+PendulumDateTime = Annotated[
+    pdl.DateTime,
+    BeforeValidator(convert_to_pendulum_datetime),
+    Field(
+        json_schema_extra={
+            "type": "string",
+            "format": "date-time",
+            "example": pdl.now().isoformat()
+        }
+    )
+]
+
 
 class StandardResponse(BaseModel, Generic[T]):
     success: bool
@@ -27,16 +51,30 @@ class CreateWorkflowSchema(BaseModel):
 
 class WorkflowResponse(BaseModel):
     id: UUID4
-    userId: UUID4
-    user: str
+    userId: str
+    # user: str
     name: str
     description: str
-    created_at: pdl.DateTime
+    # created_at: pdl.DateTime =  Field(json_schema_extra={"format": "date-time", "type": "string"})
+    created_at: datetime
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
-        extra="ignore"
+        extra="ignore",
+        json_schema_extra={
+            "examples": [
+                {
+                    "id": uuid.uuid4(),
+                    "userId": uuid.uuid4(),
+                    "user": "John Doe",
+                    "name": "John's First Workflow",
+                    "description": "Just another user",
+                    "created_at": pdl.now().isoformat()
+                }
+            ]
+        }
     )
 
-    def from_orm(self, value: Type[Base]) -> Self:
-        return self(**value.__dict__)
+    @staticmethod
+    def from_orm(value: Type[Base]) -> 'WorkflowResponse':
+        return WorkflowResponse(**value.__dict__)

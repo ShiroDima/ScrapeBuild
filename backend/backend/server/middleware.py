@@ -1,5 +1,5 @@
 from fastapi.responses import JSONResponse
-from fastapi import status, Request, Response
+from fastapi import status, Request, Response, Header
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
@@ -8,11 +8,12 @@ from starlette.requests import Request as StarletteRequest
 
 
 from urllib.parse import urlparse
-from typing import Callable
+from typing import Callable, Annotated
 import logging
 
 
 from backend.core.utils import is_production_env
+from backend.core.settings import app_settings
 
 
 class LocalhostCORSMiddleware(CORSMiddleware):
@@ -38,6 +39,9 @@ class LocalhostCORSMiddleware(CORSMiddleware):
     
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
+    """
+    Rate limiting middleware. The exact implementation of the rate limiting algorithm is injected for use.
+    """
     def __init__(self, app: ASGIApp, rate_limiter):
         super().__init__(app)
         self.rate_limiter = rate_limiter
@@ -69,7 +73,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 class LoggingMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp):
         super().__init__(app)
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(app_settings.ENVIRONMENT)
 
 
     async def dispatch(self, request: Request, call_next: Callable):
@@ -84,3 +88,36 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         except Exception as error:
             self.logger.error(f"An error occurred:\n[{method}] | [{path}]\n{error}")
             raise error
+        
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    excluded_urls = [
+        "/docs",
+        "/openapi.json",
+        "/health"
+    ]
+
+    def __init__(self, app: ASGIApp):
+        super().__init__(app)
+    
+    async def dispatch(self, request: Request, call_next: Callable):
+        logger = logging.getLogger(app_settings.ENVIRONMENT)
+
+        if request.url.path in self.excluded_urls:
+            return await call_next(request)
+        
+        logger.info("Fetching USER ID from request header...")
+        
+        _user_id = request.headers.get("X-USER-ID")
+
+        logger.info("User ID found in request header.")
+        
+        try:
+            request.state.user_id = _user_id
+        except Exception as error:
+            logger.error(f"Error occurred:\n{error}")
+            raise error
+
+        logger.info("Calling next middleware in stack...")
+
+        return await call_next(request)

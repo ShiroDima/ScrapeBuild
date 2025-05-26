@@ -1,6 +1,8 @@
+"use client"
+
+import { useRouter } from "next/navigation";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { createUserWorkflow } from "@/actions/workflows";
-import { redirect } from "next/navigation";
 import { retrieveAxiosErrorMessage } from "@/lib/helpers/retrieve-axios-error-message";
 import { isAxiosError } from "axios";
 import { useDispatch } from "react-redux";
@@ -10,6 +12,8 @@ import { displayErrorToast, displaySuccessToast } from "@/lib/helpers/custom-toa
 export const useCreateWorkflow = () => {
     const queryClient = useQueryClient()
     const dispatch = useDispatch()
+    const router = useRouter()
+    
 
     return useMutation({
         mutationKey: ["create-workflow"],
@@ -20,14 +24,18 @@ export const useCreateWorkflow = () => {
             if (!workflow) return
             await queryClient.invalidateQueries({ queryKey: ["user", "workflows"] })
 
-            displaySuccessToast("Worflow created successfully!", "create-workflow")
+            displaySuccessToast("Workflow created successfully!", "create-workflow")
 
             dispatch(addWorkflow(workflow))
 
-            redirect(`/workflow/editor/${workflow.id}`)
+            router.push(`/workflow/editor/${workflow.id}`)
         },
         onError: (error) => {
-            const errorMessage = isAxiosError(error) && retrieveAxiosErrorMessage(error)
+            let errorMessage = isAxiosError(error) && retrieveAxiosErrorMessage(error)
+            if(!errorMessage) {
+                errorMessage = error.message
+            }
+            console.error("This error from useMutation -> ", errorMessage)
 
             typeof errorMessage === "string" && displayErrorToast(errorMessage, "create-workflow")
         },

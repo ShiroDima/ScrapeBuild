@@ -76,17 +76,17 @@ def setup_logging():
     # root.handlers = []
 
     # set logging for 3rd party libraries to only show ERRORS
-    for logger in [
-        'httpx',
-        'playwright',
-        'asyncio',
-        'openai',
-        'langchain',
-        "uvicorn"
-    ]:
-        third_party_logger = logging.getLogger(logger)
-        third_party_logger.setLevel(logging.ERROR)
-        third_party_logger.propagate = False
+    # for logger in [
+    #     'httpx',
+    #     'playwright',
+    #     'asyncio',
+    #     'openai',
+    #     'langchain',
+    #     "uvicorn"
+    # ]:
+    #     third_party_logger = logging.getLogger(logger)
+    #     third_party_logger.setLevel(logging.ERROR)
+    #     third_party_logger.propagate = False
 
 
     conf_path = Path(__file__).parent / "logging_conf.yml"

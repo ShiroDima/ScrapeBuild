@@ -7,14 +7,14 @@ from sqlalchemy import select, delete
 from fastapi import Depends
 
 
-from backend.core.database.user import UserDBRepoMixin
+# from backend.core.database.user import UserDBRepoMixin
 from backend.core.database.workflow import WorkflowDBRepoMixin
 
 
 # ModelType = TypeVar('ModelType', bound=Base)
 
 
-class DBRepo(UserDBRepoMixin, WorkflowDBRepoMixin):
+class DBRepo(WorkflowDBRepoMixin):
     """
     DB CRUD Class
     """

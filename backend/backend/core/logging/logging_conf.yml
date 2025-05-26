@@ -31,7 +31,7 @@ handlers:
 loggers:
   dev:
     level: DEBUG
-    handlers: [console]
+    handlers: [console.request]
     propagate: no
 
   test:

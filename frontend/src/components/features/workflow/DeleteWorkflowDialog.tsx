@@ -38,7 +38,7 @@ const DeleteWorkflowDialog: React.FC<DeleteWorkflowDialoagProps> = ({open, setOp
                     <AlertDialogDescription>
                         If you delete this workflow, you will not be able to recover it.
                         <div className="flex flex-col py-4 gap-2">
-                            <p>If you are sure, enter <b>{workflowName}</b> to confirm:</p>
+                            <span>If you are sure, enter <b>{workflowName}</b> to confirm:</span>
                             <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} />
                         </div>
                     </AlertDialogDescription>

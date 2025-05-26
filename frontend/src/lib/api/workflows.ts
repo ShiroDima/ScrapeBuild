@@ -60,21 +60,23 @@ class Workflows {
         // }
     }
 
-    static async deleteUserWorkflow(id: string, workflowId: string): Promise<string | null> {
+    static async deleteUserWorkflow(id: string, workflowId: string): Promise<void> {
         const config: AxiosRequestConfig = {
             headers: {
                 "X-USER-ID": id
             }
         }
 
-        try {
-            const { data } = await apiClient.delete<ServerResponse<string>>(`/api/workflow/${workflowId}/delete`)
+        await apiClient.delete<ServerResponse<null>>(`/api/workflow/${workflowId}/delete`)
 
-            return data.data
-        } catch (error) {
-            console.log("Error: ", error)
-            throw error
-        }
+        // try {
+            
+
+        //     return data.data
+        // } catch (error) {
+        //     console.log("Error: ", error)
+        //     throw error
+        // }
     }
 }
 

@@ -7,35 +7,13 @@ import { AlertCircle, InboxIcon } from "lucide-react"
 import CreateWorkflowDialog from "./CreateWorkflowDialog"
 import { useGetWorkflows } from "@/hooks/query/use-get-workflows"
 import WorkflowCard from "./WorkflowCard"
+import { Workflow } from "@/lib/types/workflow"
 
 
 export default function UserWorkflows() {
-    // const {data: userWorkflows} = useQuery({
-    //     queryKey: ['workflows'],
-    //     queryFn: getUserWorkflows,
-    //     select: (data: ServerResponse<Workflow[]>) => {
-    //         if(data.data !== null) return data.data
-    //         if(data.error !== null) return data.error
-
-    //         return "An unexpected error occurred. Please try again later"
-    //     },
-    //     initialData: {data: [], error: null}
-    // })
     const {data: userWorkflows, isFetching, isError, error} = useGetWorkflows()
 
-
-    // if(typeof userWorkflows === "string") {
-    //     return (
-    //         <Alert>
-    //             <AlertCircle className="w-4 h-4" />
-    //             <AlertTitle>Error</AlertTitle>
-    //             <AlertDescription>
-    //                 {userWorkflows}
-    //             </AlertDescription>
-    //         </Alert>
-    //     )
-    // }
-
+    
     if(userWorkflows && userWorkflows.length === 0) {
         return (
             <div className="flex flex-col gap-4 h-full items-center justify-center">

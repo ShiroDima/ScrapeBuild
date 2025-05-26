@@ -36,8 +36,8 @@ export async function createUserWorkflow(form: CreateWorkflowType): Promise<Work
 }
 
 
-export async function deleteUserWorkflow(workflowId: string): Promise<string | null> {
+export async function deleteUserWorkflow(workflowId: string): Promise<string> {
     const id = await checkIsAuthenticated()
-    const workflow = await Workflows.deleteUserWorkflow(id, workflowId)
-    return workflow
+    await Workflows.deleteUserWorkflow(id, workflowId)
+    return workflowId
 }

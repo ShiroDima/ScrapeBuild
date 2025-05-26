@@ -6,21 +6,6 @@ import React, { Suspense } from "react";
 
 
 export default async function Workflows() {
-    // const {promise, isError, error} = useQuery({
-    //     queryKey: ['workflows'],
-    //     queryFn: getUserWorkflows,
-    //     refetchInterval: 5 * 1000,
-    //     // select: (data) => data.data !== null ? data.data : data.error as string,
-    //     refetchOnReconnect: 'always',
-    //     refetchOnWindowFocus: 'always'
-    // })
-
-    const queryClient = new QueryClient()
-
-    // await queryClient.prefetchQuery({
-    //     queryKey: ['workflows'],
-    //     queryFn: getUserWorkflows
-    // })
 
     return (
         <main className="flex-1 flex flex-col h-full">
@@ -35,9 +20,7 @@ export default async function Workflows() {
             </div>
 
             <div className="h-full py-6">
-                <HydrationBoundary state={dehydrate(queryClient)}>
-                    <UserWorkflows />
-                </HydrationBoundary>
+                <UserWorkflows />
             </div>
         </main>
     )

@@ -14,15 +14,15 @@ export const useDeleteWorkflow = () => {
     return useMutation({
         mutationKey: ["delete-workflow"],
         mutationFn: deleteUserWorkflow,
-        onSuccess: async (workflow) => {
+        onSuccess: async (workflowId) => {
             // TODO: Fix this to dispatch to state and save the workflow to the state so that it can eb reused without refetching from the backend.
 
-            if (!workflow) return
+            // if (!workflow) return
             await queryClient.invalidateQueries({ queryKey: ["user", "workflows"] })
 
-            displaySuccessToast("Worflow deleted successfully!", "delete-workflow")
+            displaySuccessToast("Workflow deleted successfully!", "delete-workflow")
 
-            dispatch(deleteWorkflow(workflow))
+            dispatch(deleteWorkflow(workflowId))
 
             // redirect(`/workflow/editor/${workflow.id}`)
         },

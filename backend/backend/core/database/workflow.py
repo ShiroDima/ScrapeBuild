@@ -79,14 +79,17 @@ class WorkflowDBRepoMixin:
         
         Returns:
             None
+
+        Raises:
+            Exception: If an error occurs while deleting the workflow.
         """
 
         try:
             _query = delete(Workflow).where(Workflow.id == workflow_id)
 
-            session.execute(_query)
+            await session.execute(_query)
 
-            session.commit()
+            await session.commit()
         except Exception as error:
             logger.exception(f"Error: \n{error}")
             raise error

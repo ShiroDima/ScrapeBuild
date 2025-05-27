@@ -1,3 +1,5 @@
+"use client"
+
 import { useQuery } from "@tanstack/react-query"
 import { getUserWorkflows } from "@/actions/workflows"
 import { useIsAuthed } from "../useIsAuthed"

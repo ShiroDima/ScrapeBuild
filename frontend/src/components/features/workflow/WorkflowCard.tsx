@@ -1,3 +1,5 @@
+"use client"
+
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Workflow, WorkflowStatus } from "@/lib/types/workflow"
@@ -8,15 +10,9 @@ import React, { useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import TooltipWrapper from "@/components/shared/TooltipWrapper"
@@ -38,7 +34,7 @@ const WorkflowCard: React.FC<WorkflowCardProps> = ({workflow}) => {
             <CardContent className="p-4 flex items-center justify-between h-[100px]">
                 <div className="flex items-center justify-end space-x-3">
                         <div className={cn("w-10 h-10 rounded-full flex items-center justify-center", statusColors[workflow.status])}>
-                        {isDraft ? <FileTextIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5 text-white" />}
+                        {isDraft ? <FileTextIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5 text-black dark:text-white" />}
                     </div>
                     <div>
                             <h3 className="text-base font-bold text-muted-foreground flex items-center">

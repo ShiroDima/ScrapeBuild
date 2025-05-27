@@ -1,3 +1,5 @@
+"use client"
+
 import { checkIsAuthenticated } from "@/actions/workflows"
 import React from "react"
 

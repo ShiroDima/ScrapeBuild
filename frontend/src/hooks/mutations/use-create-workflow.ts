@@ -1,5 +1,3 @@
-"use client"
-
 import { useRouter } from "next/navigation";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { createUserWorkflow } from "@/actions/workflows";

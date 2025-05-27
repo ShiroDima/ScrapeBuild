@@ -1,17 +1,22 @@
 "use client"
 
 import React from "react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, InboxIcon } from "lucide-react"
-// import { Workflow } from "@/lib/types/workflow"
+import { InboxIcon, Loader2Icon } from "lucide-react"
 import CreateWorkflowDialog from "./CreateWorkflowDialog"
 import { useGetWorkflows } from "@/hooks/query/use-get-workflows"
 import WorkflowCard from "./WorkflowCard"
-import { Workflow } from "@/lib/types/workflow"
 
 
 export default function UserWorkflows() {
-    const {data: userWorkflows, isFetching, isError, error} = useGetWorkflows()
+    const {data: userWorkflows, isLoading} = useGetWorkflows()
+
+    if(isLoading) {
+        return (
+            <div className="flex h-full w-full items-center justify-center">
+                <Loader2Icon className="w-12 h-12 animate-spin" />
+            </div>
+        )
+    }
 
     
     if(userWorkflows && userWorkflows.length === 0) {
@@ -22,7 +27,9 @@ export default function UserWorkflows() {
                 </div>
                 <div className="flex flex-col gap-1 text-center">
                     <p className="font-bold">No workflow created yet</p>
-                    <p className="text-sm text-muted-foreground">Click the button below to create your first workflow</p>
+                    <p className="text-sm text-muted-foreground">
+                        Click the button below to create your first workflow
+                    </p>
                 </div>
                 <CreateWorkflowDialog triggerText="Create your first workflow" />
             </div>

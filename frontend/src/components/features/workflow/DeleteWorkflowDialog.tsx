@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { useDeleteWorkflow } from "@/hooks/mutations/use-delete-workflow"
-import React, { MouseEventHandler } from "react"
+import React from "react"
 import { toast } from "sonner"
 
 interface DeleteWorkflowDialoagProps {
@@ -37,10 +37,10 @@ const DeleteWorkflowDialog: React.FC<DeleteWorkflowDialoagProps> = ({open, setOp
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         If you delete this workflow, you will not be able to recover it.
-                        <div className="flex flex-col py-4 gap-2">
+                        <span className="flex flex-col py-4 gap-2">
                             <span>If you are sure, enter <b>{workflowName}</b> to confirm:</span>
                             <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} />
-                        </div>
+                        </span>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
